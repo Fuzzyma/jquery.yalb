@@ -1,0 +1,25 @@
+{
+  "name": "yalb",
+  "title": "Yalb",
+  "description": "Yet Another LightBox",
+  "version": "0.1.0",
+  "homepage": "https://github.com/Fuzzyma/jquery.yalb",
+  "author": {
+    "name": "Ulrich-Matthias Schäfer"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fuzzyma/jquery.yalb"
+  },
+  "bugs": "https://github.com/Fuzzyma/jquery.yalb/issues",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/Fuzzyma/jquery.yalb/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": "*"
+  },
+  "keywords": []
+}
