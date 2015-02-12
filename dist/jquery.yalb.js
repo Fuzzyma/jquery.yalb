@@ -1,4 +1,4 @@
-/*! Yalb - v0.1.0 - 2015-02-10
+/*! jquery.yalb - v0.1.0 - 2015-02-12
 * https://github.com/Fuzzyma/jquery.yalb
 * Copyright (c) 2015 Ulrich-Matthias Schäfer; Licensed MIT */
 /* jshint -W083 */
@@ -6,24 +6,23 @@
 
     var instance = null;
 
-    $.yalb = function(options){
+    $.yalb = function(list, options){
 
         // We create an instance of this plugin
         if(!(this instanceof $.yalb)){
             // close last instance
             if(instance){ instance.yalb.trigger('close'); }
-            return new $.yalb(options);
+            return new $.yalb(list, options);
         }else{
             instance = this;
         }
 
         var settings = $.extend({}, $.yalb.defaults, options),
             images = [],
-            imgs = settings.imgs,
             current = settings.current,
+            createSpan, prev, next, close, getSrc, open, show, onload, onerror, changeImg, loadImg, showImg, resizeWindow, showError, showLoader, hideLoader, hideShowButtons,
             $container = $('<div>'),
-            $wrapper,
-            createSpan, prev, next, close, open, show, onload, onerror, changeImg, loadImg, showImg, resizeWindow, showError, showLoader, hideLoader, hideShowButtons, oldWidth = 0, oldHeight = 0;
+            $wrapper;
 
         createSpan = function(name){
             return $('<span>',{ 'class': name, click: function(){ $container.trigger(name); } });
@@ -78,6 +77,27 @@
 
         };
 
+        getSrc = function(obj){
+
+            if(typeof obj === 'string'){ return obj; }
+
+            // check if a data-attribute was specified
+            if(obj instanceof Node && settings.src.indexOf('data-') === 0){
+
+                // normalize data string and return the entry of the dataset
+                return obj.dataset[
+                    settings.src.substr(5).split('-').map(function(el, index){
+                        if(!index){ return el; }
+                        return el.charAt(0).toUpperCase() + el.slice(1);
+                    }).join('')
+                ];
+
+            }
+
+            // In any other case we rely on the normal dom-attributes like `src` or `href`
+            return obj[settings.src];
+        };
+
         // Loads one or more images
         loadImg = function(arr){
 
@@ -89,7 +109,7 @@
                 if(arr[i] >= images.length || arr[i] < 0 || images[arr[i]].loaded || images[arr[i]].pending || images[arr[i]].error){ continue; }
 
                 // set the path to the image which starts loading it, state is now "pending"
-                images[arr[i]].img.src = imgs[arr[i]][settings.src];
+                images[arr[i]].img.src = getSrc(list[arr[i]]);//list[arr[i]][settings.src];
                 images[arr[i]].pending = true;
 
             }
@@ -98,30 +118,34 @@
 
         // displays the loader-icon
         showLoader = function(){
-            $container.children('img.loader').stop().fadeIn();
+            $container.children('span.loader').stop().fadeIn();
         };
 
         // hides it
         hideLoader = function(){
-            $container.children('img.loader').stop().fadeOut();
+            $container.children('span.loader').stop().fadeOut();
             $container.children('strong.error').stop().fadeOut();
         };
 
+        // shows the image
         showImg = function(){
             $container.append($(images[current].img).addClass('image').fadeIn());
             $container.trigger('change', {index:current});
             loadImg([current-1, current+1]);
         };
 
+        // shows the error-msg
         showError = function(){
 
-            $container.children('img.image').fadeOut();
+            $container.children('img.image').fadeOut(function(){ $(this).remove(); });
+            $container.children('span.loader').stop().fadeOut();
             $container.children('strong.error').fadeIn();
 
             loadImg([current-1, current+1]);
 
         };
 
+        // resizes the window to fit the new image
         resizeWindow = function(){
             hideLoader();
 
@@ -139,36 +163,36 @@
                 height = ($(window).width() - 40) / ratio;
             }
 
+
             if($container.children('img.image').attr('src') === $(images[current].img).attr('src')){ return; }
 
             if($container.children('img.image').length){ $container.children('img.image').fadeOut(function(){ $(this).remove(); }); }
 
-            if(Math.abs(oldWidth - width) > 1 || Math.abs(oldHeight - height) > 1){
+            if(Math.abs($container.width() - width) > 1 || Math.abs($container.height() - height) > 1){
                 $container.stop();
                 $container.animate({
-                    width:width,
-                    height:height,
-                    bottom: -($(window).height() - height) / 2
+                    width: settings.width || width,
+                    height: settings.height || height,
+                    bottom: -($(window).height() - (settings.height || height)) / 2
                 }, showImg);
             }else{
                 showImg();
             }
 
-            oldHeight = height;
-            oldWidth = width;
-
         };
 
+        // next and prev-button
         hideShowButtons = function(){
             if(settings.loop){ return; }
 
-            if(current === imgs.length - 1){ $container.children('.next').hide(); }
+            if(current === list.length - 1){ $container.children('.next').hide(); }
             else{ $container.children('.next').show();}
 
             if(current === 0){ $container.children('.prev').hide(); }
             else{ $container.children('.prev').show(); }
         };
 
+        // change to previous image
         prev = function(){
             if(current > 0){
                 --current;
@@ -179,8 +203,9 @@
             }
         };
 
+        // change to next image
         next = function(){
-            if(current < imgs.length - 1){
+            if(current < list.length - 1){
                 ++current;
                 changeImg();
             }else if(settings.loop){
@@ -189,11 +214,13 @@
             }
         };
 
+        // close yalb
         close = function(){
             $container.parent().fadeOut(function(){ $(this).remove(); });
             $container.unbind();
         };
 
+        // changes to a specific image
         show = function(e, data){
             if(data.index !== null){
                 current = data.index % images.length;
@@ -201,6 +228,7 @@
             }
         };
 
+        // open yalb if not already open
         open = function(){
             $wrapper.appendTo('body').fadeIn();
             changeImg();
@@ -217,7 +245,7 @@
 
         this.yalb = $container;
 
-        for(var i = 0, len = imgs.length; i < len; ++i){
+        for(var i = 0, len = list.length; i < len; ++i){
 
             images[i] = {
                 img: new Image(),
@@ -226,8 +254,8 @@
                 error: false
             };
 
-            images[i].img.onload = (function(i){ return onload(i); })(i);
-            images[i].img.onerror = (function(i){ return onerror(i); })(i);
+            images[i].img.onload = onload(i);
+            images[i].img.onerror = onerror(i);
 
         }
 
@@ -278,11 +306,12 @@
     };
 
     $.yalb.defaults = {
-        imgs: [],
         src: 'src',
         current: 0,
         'class': 'yalb',
         loop: true,
-        open: true
+        open: true,
+        width: 0,
+        height: 0
     };
 })(jQuery);
