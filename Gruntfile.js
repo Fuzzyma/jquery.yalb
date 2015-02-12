@@ -79,7 +79,8 @@ module.exports = function(grunt) {
       options: {
         files: ['package.json', 'yalb.jquery.json', 'bower.json'],
         updateConfigs: ['pkg'],
-        commitFiles: ['-a']
+        commitFiles: ['-a'],
+        pushTo: 'origin'
       }
     },
   });

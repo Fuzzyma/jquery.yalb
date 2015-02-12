@@ -1,0 +1,26 @@
+{
+  "name": "jquery.yalb",
+  "version": "0.2.0",
+  "homepage": "https://github.com/Fuzzyma/jquery.yalb",
+  "authors": [
+    "Ulrich-Matthias Schäfer"
+  ],
+  "description": "Yet Another LighBox. Easy to use and out of the Box",
+  "main": [
+    "./src/jquery.yalb.js",
+    "./src/yalb.css"
+  ],
+  "keywords": [
+    "jquery-plugin",
+    "lightbox",
+    "yalb"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
