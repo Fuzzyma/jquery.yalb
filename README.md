@@ -109,6 +109,20 @@ The following options can be passed when calling yalb:
 - `class` ( `default:'yalb'` ), The class passed to the html-container of yalb
 - `loop` ( `default:true` ), If true, images will be repeated when hitting the first/last image
 - `open` ( `default:true` ), If true, yalb opens when called
+- `width` ( `default:0` ), max-with of the Yalb-window
+- `height` ( `default:0` ), max-height of the Yalb-window
+
+You can change the default values for the whole page by assigning to `$.yalb.defaults`
+
+    $.yalb.defaults = {
+        src: 'src',
+        current: 0,
+        'class': 'yalb',
+        loop: true,
+        open: true,
+        width: 0,
+        height: 0
+    };
 
 ### Methods
 

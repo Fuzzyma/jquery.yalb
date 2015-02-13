@@ -168,31 +168,31 @@
         resizeWindow = function(){
             hideLoader();
 
-            var ratio = images[current].img.naturalWidth / images[current].img.naturalHeight;
-            var height = images[current].img.naturalHeight;
-            var width = images[current].img.naturalWidth;
-
-            if(height > $(window).height() - 40){
-                height = $(window).height() - 40;
-                width = ratio * ($(window).height() - 40);
-            }
-
-            if(width > $(window).width() - 40){
-                width = $(window).width() - 40;
-                height = ($(window).width() - 40) / ratio;
-            }
-
-
             if($container.children('img.image').attr('src') === $(images[current].img).attr('src')){ return; }
-
             if($container.children('img.image').length){ $container.children('img.image').fadeOut(function(){ $(this).remove(); }); }
+
+            var ratio = images[current].img.naturalWidth / images[current].img.naturalHeight,
+                height = images[current].img.naturalHeight,
+                width = images[current].img.naturalWidth,
+                maxHeight = settings.height || $(window).height() - 40
+                maxWidth = settings.width || $(window).width() - 40
+
+            if(height > maxHeight){
+                height = maxHeight;
+                width = ratio * maxHeight;
+            }
+
+            if(width > maxWidth){
+                width = maxWidth;
+                height = maxWidth / ratio;
+            }
 
             if(Math.abs($container.width() - width) > 1 || Math.abs($container.height() - height) > 1){
                 $container.stop();
                 $container.animate({
-                    width: settings.width || width,
-                    height: settings.height || height,
-                    bottom: -($(window).height() - (settings.height || height)) / 2
+                    width: width,
+                    height: height,
+                    bottom: -($(window).height() - height) / 2
                 }, showImg);
             }else{
                 showImg();
