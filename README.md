@@ -83,7 +83,22 @@ In your web page:
 
 		$.yalb(images, {src: 'path'});
 
-		// however you can't do something like this: {src: 'deep.in.the.object.path'}
+		// or even
+		var images = [
+			{
+				path: {
+					'to': {
+						'image': 'path/to/image.jpg'
+					}
+				}
+			},
+			{
+				// and so on
+			}
+		];
+
+		$.yalb(images, {src: 'path.to.image'});
+
 
 ### Options
 
@@ -92,7 +107,7 @@ The following options can be passed when calling yalb:
 - `src` ( `default:'src'` ), Attribute where the path is located.
 - `current` ( `default:0` ), The image which is presented when opening yalb
 - `class` ( `default:'yalb'` ), The class passed to the html-container of yalb
-- `loop` ( `default:true` ), If true, images will be repeated when hitting the last image
+- `loop` ( `default:true` ), If true, images will be repeated when hitting the first/last image
 - `open` ( `default:true` ), If true, yalb opens when called
 
 ### Methods

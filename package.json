@@ -14,9 +14,11 @@
   },
   "contributors": {
     "name": "Ulrich-Matthias Schäfer"
-  }, 
+  },
   "homepage": "https://github.com/Fuzzyma/jquery.yalb",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Fuzzyma/jquery.yalb.git"
@@ -33,7 +35,8 @@
     "grunt": "~0.4.5",
     "grunt-contrib-cssmin": "^0.12.1",
     "grunt-bump": "^0.1.0",
-    "grunt-contrib-copy": "^0.7.0"
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-bumper": "^1.0.4"
   },
   "dependencies": {
     "jquery": "*"

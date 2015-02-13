@@ -75,12 +75,9 @@ module.exports = function(grunt) {
         files: '<%= jshint.src.src %>'
       }
     },
-    bump: {
+    bumper: {
       options: {
-        files: ['package.json', 'yalb.jquery.json', 'bower.json'],
-        updateConfigs: ['pkg'],
-        commitFiles: ['-a'],
-        pushTo: 'origin'
+        files: ['package.json', 'yalb.jquery.json', 'bower.json']
       }
     },
   });
@@ -93,7 +90,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-bump');
+  grunt.loadNpmTasks('grunt-bumper');
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'clean', 'copy', 'concat', 'uglify', 'cssmin']);

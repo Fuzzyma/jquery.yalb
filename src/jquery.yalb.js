@@ -75,7 +75,7 @@
                 // if there was an error loading the image, display the error ( no need to resize here )
                 showError();
             }else{
-                // the image has to be laded first. Display loader and start loading the Image
+                // the image has to be loaded first. Display loader and start loading the Image
                 showLoader();
                 loadImg();
             }
@@ -99,8 +99,16 @@
 
             }
 
-            // In any other case we rely on the normal dom-attributes like `src` or `href`
-            return obj[settings.src];
+            var split = settings.src.split('.');
+
+            // extract path from object in case `src`-path is nested
+            for(var i = 0, len = split.length; i < len; ++i){
+                obj = obj[split[i]];
+            }
+
+            // return path string
+            return obj;
+
         };
 
         // Loads one or more images
@@ -108,13 +116,19 @@
 
             arr = arr || [current];
 
-            for(var i = 0, len = arr.length; i < len; ++i){
+            //for(var i = 0, len = arr.length; i < len; ++i){
+            for(var i = arr.length; i--;){
 
-                // when image is already loaded or we are waiting for it or index out of range: continue
+                // When looping is active, make sure we also load images out of range
+                if(settings.loop){
+                    arr[i] = (arr[i] + images.length) % images.length;
+                }
+
+                // check if image is loaded / error / pending or index out of range
                 if(arr[i] >= images.length || arr[i] < 0 || images[arr[i]].loaded || images[arr[i]].pending || images[arr[i]].error){ continue; }
 
-                // set the path to the image which starts loading it, state is now "pending"
-                images[arr[i]].img.src = getSrc(list[arr[i]]);//list[arr[i]][settings.src];
+                // start image-loading by setting its path, state is now "pending"
+                images[arr[i]].img.src = getSrc(list[arr[i]]);
                 images[arr[i]].pending = true;
 
             }
