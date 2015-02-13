@@ -333,4 +333,9 @@
         width: 0,
         height: 0
     };
+    
+    $.fn.yalb = function(options){
+        $.yalb(this, options);
+        return this;
+    }
 })(jQuery);

@@ -17,9 +17,6 @@ In your web page:
 	<script>
 	jQuery(function($) {
 	
-	  // Some images to be shown
-	  // This is only one possibility to call yalb
-      // See Below for other accepted formats
 	  var images = [
 	    'img1.jpg',
 	    'img2.jpg',
@@ -29,6 +26,11 @@ In your web page:
 	  ]
 	
 	  $.yalb(images);
+
+      // or just
+      $('img').yalb();
+
+      // for other possibilities to call yalb see below
 
 	});
 	</script>
@@ -67,7 +69,11 @@ In your web page:
 		var images = $('img');
 		$.yalb(images);
 
+		// or of course
+		$('img').yalb();
+
 		// or same as above
+
 
 - selfmade object containing the path
 
@@ -98,7 +104,6 @@ In your web page:
 		];
 
 		$.yalb(images, {src: 'path.to.image'});
-
 
 ### Options
 
