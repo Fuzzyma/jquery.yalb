@@ -1,4 +1,4 @@
-/*! jquery.yalb - v0.2.0 - 2015-02-12
+/*! jquery.yalb - v0.3.0 - 2015-02-13
 * https://github.com/Fuzzyma/jquery.yalb
 * Copyright (c) 2015 Ulrich-Matthias Schäfer; Licensed MIT */
 /* jshint -W083 */
@@ -70,7 +70,7 @@
                 // if there was an error loading the image, display the error ( no need to resize here )
                 showError();
             }else{
-                // the image has to be laded first. Display loader and start loading the Image
+                // the image has to be loaded first. Display loader and start loading the Image
                 showLoader();
                 loadImg();
             }
@@ -94,8 +94,16 @@
 
             }
 
-            // In any other case we rely on the normal dom-attributes like `src` or `href`
-            return obj[settings.src];
+            var split = settings.src.split('.');
+
+            // extract path from object in case `src`-path is nested
+            for(var i = 0, len = split.length; i < len; ++i){
+                obj = obj[split[i]];
+            }
+
+            // return path string
+            return obj;
+
         };
 
         // Loads one or more images
@@ -103,13 +111,19 @@
 
             arr = arr || [current];
 
-            for(var i = 0, len = arr.length; i < len; ++i){
+            //for(var i = 0, len = arr.length; i < len; ++i){
+            for(var i = arr.length; i--;){
 
-                // when image is already loaded or we are waiting for it or index out of range: continue
+                // When looping is active, make sure we also load images out of range
+                if(settings.loop && arr[i] < 0){
+                    arr[i] += images.length;
+                }
+
+                // check if image is loaded / error / pending or index out of range
                 if(arr[i] >= images.length || arr[i] < 0 || images[arr[i]].loaded || images[arr[i]].pending || images[arr[i]].error){ continue; }
 
-                // set the path to the image which starts loading it, state is now "pending"
-                images[arr[i]].img.src = getSrc(list[arr[i]]);//list[arr[i]][settings.src];
+                // start image-loading by setting its path, state is now "pending"
+                images[arr[i]].img.src = getSrc(list[arr[i]]);
                 images[arr[i]].pending = true;
 
             }
@@ -149,31 +163,31 @@
         resizeWindow = function(){
             hideLoader();
 
-            var ratio = images[current].img.naturalWidth / images[current].img.naturalHeight;
-            var height = images[current].img.naturalHeight;
-            var width = images[current].img.naturalWidth;
-
-            if(height > $(window).height() - 40){
-                height = $(window).height() - 40;
-                width = ratio * ($(window).height() - 40);
-            }
-
-            if(width > $(window).width() - 40){
-                width = $(window).width() - 40;
-                height = ($(window).width() - 40) / ratio;
-            }
-
-
             if($container.children('img.image').attr('src') === $(images[current].img).attr('src')){ return; }
-
             if($container.children('img.image').length){ $container.children('img.image').fadeOut(function(){ $(this).remove(); }); }
+
+            var ratio = images[current].img.naturalWidth / images[current].img.naturalHeight,
+                height = images[current].img.naturalHeight,
+                width = images[current].img.naturalWidth,
+                maxHeight = settings.height || $(window).height() - 40,
+                maxWidth = settings.width || $(window).width() - 40;
+
+            if(height > maxHeight){
+                height = maxHeight;
+                width = ratio * maxHeight;
+            }
+
+            if(width > maxWidth){
+                width = maxWidth;
+                height = maxWidth / ratio;
+            }
 
             if(Math.abs($container.width() - width) > 1 || Math.abs($container.height() - height) > 1){
                 $container.stop();
                 $container.animate({
-                    width: settings.width || width,
-                    height: settings.height || height,
-                    bottom: -($(window).height() - (settings.height || height)) / 2
+                    width: width,
+                    height: height,
+                    bottom: -($(window).height() - height) / 2
                 }, showImg);
             }else{
                 showImg();
@@ -183,7 +197,7 @@
 
         // next and prev-button
         hideShowButtons = function(){
-            if(settings.loop){ return; }
+            if(settings.loop && list.length > 1){ return; }
 
             if(current === list.length - 1){ $container.children('.next').hide(); }
             else{ $container.children('.next').show();}
@@ -314,4 +328,10 @@
         width: 0,
         height: 0
     };
+    
+    $.fn.yalb = function(options){
+        $.yalb(this, options);
+        return this;
+    };
+
 })(jQuery);
