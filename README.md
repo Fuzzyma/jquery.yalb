@@ -5,11 +5,14 @@ Easy to use, out of the box
 
 ## Getting Started
 Download the [production version][min] or the [development version][max].
+Or run 
+	
+	bower install jquery.yalb
 
 [min]: https://raw.github.com/ulima/jquery.yalb/master/dist/yalb.min.js
 [max]: https://raw.github.com/ulima/jquery.yalb/master/dist/yalb.js
 
-In your web page:
+Include yalb after jquery in your web page:
 
 
 	<script src="jquery.js"></script>

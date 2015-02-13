@@ -174,8 +174,8 @@
             var ratio = images[current].img.naturalWidth / images[current].img.naturalHeight,
                 height = images[current].img.naturalHeight,
                 width = images[current].img.naturalWidth,
-                maxHeight = settings.height || $(window).height() - 40
-                maxWidth = settings.width || $(window).width() - 40
+                maxHeight = settings.height || $(window).height() - 40,
+                maxWidth = settings.width || $(window).width() - 40;
 
             if(height > maxHeight){
                 height = maxHeight;
@@ -337,5 +337,6 @@
     $.fn.yalb = function(options){
         $.yalb(this, options);
         return this;
-    }
+    };
+
 })(jQuery);
