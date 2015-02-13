@@ -120,8 +120,8 @@
             for(var i = arr.length; i--;){
 
                 // When looping is active, make sure we also load images out of range
-                if(settings.loop){
-                    arr[i] = (arr[i] + images.length) % images.length;
+                if(settings.loop && arr[i] < 0){
+                    arr[i] += images.length;
                 }
 
                 // check if image is loaded / error / pending or index out of range
@@ -202,7 +202,7 @@
 
         // next and prev-button
         hideShowButtons = function(){
-            if(settings.loop){ return; }
+            if(settings.loop && list.length > 1){ return; }
 
             if(current === list.length - 1){ $container.children('.next').hide(); }
             else{ $container.children('.next').show();}
