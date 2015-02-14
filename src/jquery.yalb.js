@@ -305,6 +305,8 @@
             open();
             changeImg();
         }
+        
+        return this;
     };
 
     $.yalb.prev = function(){
