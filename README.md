@@ -3,6 +3,10 @@
 Yet Another LightBox  
 Easy to use, out of the box
 
+If you are looking for a plain-javascript-version take a look at [yalb][yalb]!
+
+[yalb]: https://github.com/Fuzzyma/yalb
+
 ## Getting Started
 Download the [production version][min] or the [development version][max].
 Or run 
