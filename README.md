@@ -9,14 +9,14 @@ Or run
 	
 	bower install jquery.yalb
 
-[min]: https://raw.github.com/ulima/jquery.yalb/master/dist/yalb.min.js
-[max]: https://raw.github.com/ulima/jquery.yalb/master/dist/yalb.js
+[min]: https://raw.githubusercontent.com/Fuzzyma/jquery.yalb/master/dist/jquery.yalb.min.js
+[max]: https://raw.githubusercontent.com/Fuzzyma/jquery.yalb/master/dist/jquery.yalb.js
 
 Include yalb after jquery in your web page:
 
     <link rel="stylesheet" href="dist/yalb.min.css">
 	<script src="jquery.js"></script>
-	<script src="dist/yalb.min.js"></script>
+	<script src="dist/jquery.yalb.min.js"></script>
 	<script>
 	jQuery(function($) {
 	
@@ -143,7 +143,7 @@ You can control the behavior of yalb with the following methods
 - `$.yalb.show(index)` - Changes to the image on position `index`
 - `$.yalb.on()` - Binds handler to an event (take a look at the **Events**-section)
 - `$.yalb.off()` - Removes Handler (**Caution!!** - This will also remove handlers used by yalb itself when you don't explicitely specify a listener which should be removed or when you don't use namespaced events)
-- `$.yalb.get()` - Gets the jQuery-instance of the container to which all events are binded
+- `$.yalb.get()` - Gets the jQuery-instance of the container on which all events are triggered
 
 ### Events
 
