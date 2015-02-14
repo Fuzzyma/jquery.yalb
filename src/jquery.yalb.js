@@ -310,42 +310,49 @@
     };
 
     $.yalb.prev = function(){
-        if(!instance){ return; }
+        if(!instance){ return $.yalb; }
         instance.yalb.trigger('prev');
+        return $.yalb;
     };
 
     $.yalb.next = function(){
-        if(!instance){ return; }
+        if(!instance){ return $.yalb; }
         instance.yalb.trigger('next');
+        return $.yalb;
     };
 
     $.yalb.close = function(){
-        if(!instance){ return; }
+        if(!instance){ return $.yalb; }
         instance.yalb.trigger('close');
+        return $.yalb;
     };
 
     $.yalb.show = function(index){
-        if(!instance){ return; }
+        if(!instance){ return $.yalb; }
         instance.yalb.trigger('show', {index:index});
+        return $.yalb;
     };
 
     $.yalb.open = function(){
-        if(!instance){ return; }
+        if(!instance){ return $.yalb; }
         instance.yalb.trigger('open');
+        return $.yalb;
     };
 
     $.yalb.on = function(){
-        if(!instance){ return; }
+        if(!instance){ return $.yalb; }
         instance.yalb.on.apply(instance.yalb, Array.prototype.slice.call(arguments, 0));
+        return $.yalb;
     };
 
     $.yalb.off = function(){
-        if(!instance){ return; }
+        if(!instance){ return $.yalb; }
         instance.yalb.off.apply(instance.yalb, Array.prototype.slice.call(arguments, 0));
+        return $.yalb;
     };
 
     $.yalb.get = function(){
-        if(!instance){ return; }
+        if(!instance){ return $.yalb; }
         return instance.yalb;
     };
 
