@@ -14,7 +14,7 @@ Or run
 
 Include yalb after jquery in your web page:
 
-
+    <link rel="stylesheet" href="dist/yalb.min.css">
 	<script src="jquery.js"></script>
 	<script src="dist/yalb.min.js"></script>
 	<script>
@@ -155,3 +155,10 @@ You can listen to the following Events when using yalb:
 - `next` - When next-button is pressed
 - `prev` - When prev-button is pressed
 - `show` - When show is called
+
+### Style
+
+You can style yalb to your own needs. An example-style is shipped with the code. You can change it to your needs.
+Every button used is styled with css-only. No icon is needed. Even the loading-animation is css.
+
+Take a look into the css-file - it's selfexplaining!

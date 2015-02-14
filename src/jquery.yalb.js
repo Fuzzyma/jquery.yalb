@@ -25,63 +25,73 @@
         var settings = $.extend({}, $.yalb.defaults, options),
             images = [],
             current = settings.current,
-            createSpan, prev, next, close, getSrc, open, show, onload, onerror, changeImg, loadImg, showImg, resizeWindow, showError, showLoader, hideLoader, hideShowButtons,
             $container = $('<div>'),
-            $wrapper;
+            $wrapper,
+            createSpan,
+            hideLoader,
+            hideShowButtons,
+            showLoader,
+            showError,
+            showImg,
+            getSrc,
+            loadImg,
+            changeImg,
+            resizeWindow,
+            onerror,
+            onload,
+            prev,
+            next,
+            show,
+            open,
+            close;
 
+
+        // Helper, gives a span with added class and click-event
         createSpan = function(name){
             return $('<span>',{ 'class': name, click: function(){ $container.trigger(name); } });
         };
 
-        // add prev/next-links, loader and error-msg
-        $container.addClass(settings['class'])
-                  .append(createSpan('prev'))
-                  .append(createSpan('next'))
-                  .append(createSpan('close'))
-                  .append($('<span>').addClass('loader').hide())
-                  .append($('<strong>').addClass('error').hide());
-
-        // wrapper containing the container
-        $wrapper = $('<div>').addClass(settings['class'] + '_wrapper').click(function(e){
-            if(e.target === this){ $container.trigger('close'); }
-        }).append($container);
-
-        // returns function which is called when one image is loaded
-        onload = function(i){
-            return function(){
-                images[i].loaded = true;
-                // when the just loaded image is the current one we are waiting for: change to it ( we could directly call resizeWindow here)
-                if(i === current){ changeImg(); }
-            };
+        // hides the loader-icon
+        hideLoader = function(){
+            $container.children('span.loader').stop().fadeOut();
+            $container.children('strong.error').stop().fadeOut();
         };
 
-        // returns function which is called when one image could not be loaded
-        onerror = function(i){
-            return function(){
-                images[i].error = true;
-                if(i === current){ changeImg(); }
-            };
+        // hides or shows next and prev-button
+        hideShowButtons = function(){
+            if(settings.loop && list.length > 1){ return; }
+
+            if(current === list.length - 1){ $container.children('.next').hide(); }
+            else{ $container.children('.next').show();}
+
+            if(current === 0){ $container.children('.prev').hide(); }
+            else{ $container.children('.prev').show(); }
         };
 
-        // change the image
-        changeImg = function(){
+        // displays the loader-icon
+        showLoader = function(){
+            $container.children('span.loader').stop().fadeIn();
+        };
 
-            hideShowButtons();
+        // shows the error-msg
+        showError = function(){
 
-            if(images[current].loaded){
-                // when image is already loaded, start the resizing process
-                resizeWindow();
-            }else if(images[current].error){
-                // if there was an error loading the image, display the error ( no need to resize here )
-                showError();
-            }else{
-                // the image has to be loaded first. Display loader and start loading the Image
-                showLoader();
-                loadImg();
-            }
+            $container.children('img.image').fadeOut(function(){ $(this).remove(); });
+            $container.children('span.loader').stop().fadeOut();
+            $container.children('strong.error').fadeIn();
+
+            loadImg([current-1, current+1]);
 
         };
 
+        // shows the image
+        showImg = function(){
+            $container.append($(images[current].img).addClass('image').fadeIn());
+            $container.trigger('change', {index:current});
+            loadImg([current-1, current+1]);
+        };
+
+        // returns the src-path of an image
         getSrc = function(obj){
 
             if(typeof obj === 'string'){ return obj; }
@@ -116,7 +126,6 @@
 
             arr = arr || [current];
 
-            //for(var i = 0, len = arr.length; i < len; ++i){
             for(var i = arr.length; i--;){
 
                 // When looping is active, make sure we also load images out of range
@@ -124,7 +133,7 @@
                     arr[i] += images.length;
                 }
 
-                // check if image is loaded / error / pending or index out of range
+                // check if image is loaded / error / pending or index is out of range
                 if(arr[i] >= images.length || arr[i] < 0 || images[arr[i]].loaded || images[arr[i]].pending || images[arr[i]].error){ continue; }
 
                 // start image-loading by setting its path, state is now "pending"
@@ -135,32 +144,22 @@
 
         };
 
-        // displays the loader-icon
-        showLoader = function(){
-            $container.children('span.loader').stop().fadeIn();
-        };
+        // changes the image
+        changeImg = function(){
 
-        // hides it
-        hideLoader = function(){
-            $container.children('span.loader').stop().fadeOut();
-            $container.children('strong.error').stop().fadeOut();
-        };
+            hideShowButtons();
 
-        // shows the image
-        showImg = function(){
-            $container.append($(images[current].img).addClass('image').fadeIn());
-            $container.trigger('change', {index:current});
-            loadImg([current-1, current+1]);
-        };
-
-        // shows the error-msg
-        showError = function(){
-
-            $container.children('img.image').fadeOut(function(){ $(this).remove(); });
-            $container.children('span.loader').stop().fadeOut();
-            $container.children('strong.error').fadeIn();
-
-            loadImg([current-1, current+1]);
+            if(images[current].loaded){
+                // when image is already loaded, start the resizing process
+                resizeWindow();
+            }else if(images[current].error){
+                // if there was an error loading the image, display the error ( no need to resize here )
+                showError();
+            }else{
+                // the image has to be loaded first. Display loader and start loading the Image
+                showLoader();
+                loadImg();
+            }
 
         };
 
@@ -168,6 +167,7 @@
         resizeWindow = function(){
             hideLoader();
 
+            // make sure that new image is not the same as current, fade Out the old Image
             if($container.children('img.image').attr('src') === $(images[current].img).attr('src')){ return; }
             if($container.children('img.image').length){ $container.children('img.image').fadeOut(function(){ $(this).remove(); }); }
 
@@ -177,6 +177,7 @@
                 maxHeight = settings.height || $(window).height() - 40,
                 maxWidth = settings.width || $(window).width() - 40;
 
+            // scale down image if to big
             if(height > maxHeight){
                 height = maxHeight;
                 width = ratio * maxHeight;
@@ -187,6 +188,7 @@
                 height = maxWidth / ratio;
             }
 
+            // when image-dimension didn't change to much ( < 1px) don't animate
             if(Math.abs($container.width() - width) > 1 || Math.abs($container.height() - height) > 1){
                 $container.stop();
                 $container.animate({
@@ -200,15 +202,21 @@
 
         };
 
-        // next and prev-button
-        hideShowButtons = function(){
-            if(settings.loop && list.length > 1){ return; }
+        // returns function which is called when one image could not be loaded
+        onerror = function(i){
+            return function(){
+                images[i].error = true;
+                if(i === current){ changeImg(); }
+            };
+        };
 
-            if(current === list.length - 1){ $container.children('.next').hide(); }
-            else{ $container.children('.next').show();}
-
-            if(current === 0){ $container.children('.prev').hide(); }
-            else{ $container.children('.prev').show(); }
+        // returns function which is called when one image is loaded
+        onload = function(i){
+            return function(){
+                images[i].loaded = true;
+                // when the just loaded image is the current one we are waiting for: change to it ( we could directly call resizeWindow here)
+                if(i === current){ changeImg(); }
+            };
         };
 
         // change to previous image
@@ -233,12 +241,6 @@
             }
         };
 
-        // close yalb
-        close = function(){
-            $container.parent().fadeOut(function(){ $(this).remove(); });
-            $container.unbind();
-        };
-
         // changes to a specific image
         show = function(e, data){
             if(data.index !== null){
@@ -247,13 +249,32 @@
             }
         };
 
+        // close yalb
+        close = function(){
+            $container.parent().fadeOut(function(){ $(this).remove(); });
+            $container.unbind();
+        };
+
         // open yalb if not already open
         open = function(){
             $wrapper.appendTo('body').fadeIn();
             changeImg();
         };
 
-        // Bind events to yalb
+        // add prev/next-links, loader and error-msg
+        $container.addClass(settings['class'])
+                  .append(createSpan('prev'))
+                  .append(createSpan('next'))
+                  .append(createSpan('close'))
+                  .append($('<span>').addClass('loader').hide())
+                  .append($('<strong>').addClass('error').hide());
+
+        // wrapper containing yalb
+        $wrapper = $('<div>').addClass(settings['class'] + '_wrapper').click(function(e){
+            if(e.target === this){ $container.trigger('close'); }
+        }).append($container);
+
+         // Bind events to yalb
         $container.on({
             prev:prev,
             next:next,
@@ -264,6 +285,7 @@
 
         this.yalb = $container;
 
+        // loop through all images and create an image-object and a state-machine for every one
         for(var i = 0, len = list.length; i < len; ++i){
 
             images[i] = {
@@ -278,6 +300,7 @@
 
         }
 
+        // Open yalb
         if(settings.open){
             open();
             changeImg();
@@ -333,7 +356,7 @@
         width: 0,
         height: 0
     };
-    
+
     $.fn.yalb = function(options){
         $.yalb(this, options);
         return this;
