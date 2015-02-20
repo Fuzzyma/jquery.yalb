@@ -108,7 +108,7 @@ html, body {
     z-index:1;
     top:20%;
     text-align:center;
-    margin-top:-2px;
+    margin-top:2px;
     box-sizing:border-box;
     padding:0 48px;
 }

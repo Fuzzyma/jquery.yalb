@@ -1,4 +1,4 @@
-/*! jquery.yalb - v0.3.1 - 2015-02-14
+/*! jquery.yalb - v0.3.1 - 2015-02-20
 * https://github.com/Fuzzyma/jquery.yalb
 * Copyright (c) 2015 Ulrich-Matthias Schäfer; Licensed MIT */
 /* jshint -W083 */
@@ -94,13 +94,7 @@
             // check if a data-attribute was specified
             if(obj instanceof Node && settings.src.indexOf('data-') === 0){
 
-                // normalize data string and return the entry of the dataset
-                return obj.dataset[
-                    settings.src.substr(5).split('-').map(function(el, index){
-                        if(!index){ return el; }
-                        return el.charAt(0).toUpperCase() + el.slice(1);
-                    }).join('')
-                ];
+                return obj.getAttribute(settings.src);
 
             }
 
