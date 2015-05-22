@@ -251,7 +251,7 @@
 
         // open yalb if not already open
         open = function(){
-            $wrapper.appendTo('body').fadeIn();
+            $wrapper.appendTo('body').hide().fadeIn();
             changeImg();
         };
 
