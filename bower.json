@@ -7,8 +7,8 @@
   ],
   "description": "Yet Another LighBox. Easy to use and out of the Box",
   "main": [
-    "./src/jquery.yalb.js",
-    "./src/yalb.css"
+    "./dist/jquery.yalb.js",
+    "./dist/yalb.css"
   ],
   "keywords": [
     "jquery-plugin",
