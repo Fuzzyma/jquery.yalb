@@ -1,4 +1,4 @@
-/*! jquery.yalb - v0.3.2 - 2015-02-20
+/*! jquery.yalb - v0.3.2 - 2015-06-24
 * https://github.com/Fuzzyma/jquery.yalb
 * Copyright (c) 2015 Ulrich-Matthias Schäfer; Licensed MIT */
 /* jshint -W083 */
@@ -246,7 +246,7 @@
 
         // open yalb if not already open
         open = function(){
-            $wrapper.appendTo('body').fadeIn();
+            $wrapper.appendTo('body').hide().fadeIn();
             changeImg();
         };
 
