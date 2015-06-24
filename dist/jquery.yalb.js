@@ -1,4 +1,4 @@
-/*! jquery.yalb - v0.3.2 - 2015-06-24
+/*! jquery.yalb - v0.3.3 - 2015-06-24
 * https://github.com/Fuzzyma/jquery.yalb
 * Copyright (c) 2015 Ulrich-Matthias Schäfer; Licensed MIT */
 /* jshint -W083 */
