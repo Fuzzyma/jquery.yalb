@@ -77,7 +77,7 @@ module.exports = function(grunt) {
     },
     bumper: {
       options: {
-        files: ['package.json', 'yalb.jquery.json', 'bower.json']
+        files: ['package.json', 'bower.json']
       }
     },
   });
